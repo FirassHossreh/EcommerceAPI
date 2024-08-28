@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 const databaseConnection = require("./configs/databaseConnection");
 const categoryModel = require("./models/CategoryModel");
 const categoryRoutes = require("./routes/categoryRoute");
+const ApiErrors = require("./utils/apiErrors");
+const apiErrorMiddleware = require("./middlewares/apiErrorMiddleware");
 dotenv.config();
 const app = express();
 databaseConnection();
@@ -17,7 +19,14 @@ app.use(express.json());
 
 /*routes in application*/
 app.use("/api/v1", categoryRoutes);
+app.all("*", (req, res, next) => {
+  next(new ApiErrors(`cant find this route : ${req.originalUrl} `, 400));
+});
 /*routes in application*/
+
+/* custom middlerwares */
+app.use(apiErrorMiddleware);
+/* custom middlerwares */
 
 /*server listening process*/
 const PORT = process.env.PORT || 5000;

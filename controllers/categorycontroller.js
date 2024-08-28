@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const slugify = require("slugify");
 const categoryModel = require("../models/CategoryModel");
 const morgan = require("morgan");
-const { ReturnDocument } = require("mongodb");
+const apiErrors = require("../utils/apiErrors");
 /* get categories */
 const getCategories = asyncHandler(async (req, res) => {
   const page = req.query.page * 1 || 1;
@@ -14,10 +14,10 @@ const getCategories = asyncHandler(async (req, res) => {
     .json({ results: categories.length, page, data: categories });
 });
 /* get spacefic category */
-const getSpaceficCategory = asyncHandler(async (req, res) => {
+const getSpaceficCategory = asyncHandler(async (req, res, next) => {
   const category = await categoryModel.findById(req.params.id);
   if (!category) {
-    return res.status(404).json({ msg: "category not found" });
+    return next(new apiErrors("cateogry not found", 404));
   }
   res.status(200).json({ data: category });
 });
@@ -52,7 +52,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
   if (!deletedCategory) {
     return res.status(404).json({ msg: "category not found" });
   }
-  res.status(200).json(deletedCategory);
+  res.status(200).json({ deletedCategory });
 });
 module.exports = {
   createCategory,
