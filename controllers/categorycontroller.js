@@ -30,7 +30,7 @@ const createCategory = asyncHandler(async (req, res) => {
   return res.status(201).json(newCategory);
 });
 /* update category */
-const updateCategory = asyncHandler(async (req, res) => {
+const updateCategory = asyncHandler(async (req, res, next) => {
   const updatedCategory = await categoryModel.findByIdAndUpdate(
     req.params.id,
     {
@@ -40,17 +40,17 @@ const updateCategory = asyncHandler(async (req, res) => {
     { new: true }
   );
   if (!updatedCategory) {
-    return res.status(404).json({ msg: "category not found" });
+    return next(new apiErrors("cateogry not found", 404));
   }
   return res.status(200).json(updatedCategory);
 });
 /* delete category */
-const deleteCategory = asyncHandler(async (req, res) => {
+const deleteCategory = asyncHandler(async (req, res, next) => {
   const deletedCategory = await categoryModel.findByIdAndDelete(req.params.id, {
     new: true,
   });
   if (!deletedCategory) {
-    return res.status(404).json({ msg: "category not found" });
+    return next(new apiErrors("cateogry not found", 404));
   }
   res.status(200).json({ deletedCategory });
 });
