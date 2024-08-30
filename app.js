@@ -2,7 +2,6 @@ const express = require("express");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const databaseConnection = require("./configs/databaseConnection");
-const categoryModel = require("./models/CategoryModel");
 const categoryRoutes = require("./routes/categoryRoute");
 const ApiErrors = require("./utils/apiErrors");
 const apiErrorMiddleware = require("./middlewares/apiErrorMiddleware");
@@ -34,3 +33,9 @@ app.listen(PORT, () => {
   console.log(`server listening of port ${PORT}`);
 });
 /*server listening process*/
+
+/* handle rejection for promises */
+process.on("unhandledRejection", (err) => {
+  console.error(`unhandledRejection Error : ${err}`);
+});
+/* handle rejection for promises */

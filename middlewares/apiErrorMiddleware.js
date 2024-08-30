@@ -1,7 +1,9 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const apiErrorMiddleware = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.statusText = err.statusText || "error";
-  if (process.env.ENVIRUMENT == "development") {
+  if (process.env.ENVIRONMENT == "development") {
     apiErrorDevelopment(err, res);
   } else {
     apiErrorProduction(err, res);
